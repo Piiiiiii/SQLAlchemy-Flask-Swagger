@@ -12,7 +12,8 @@ new_table_name = 'revised_campaigns'
 
 
 @app.route('/')
-def connect_heroku_pqsql():
+def connect_create_table():
+    return_info = ''
     try:
         # Update this URL with yours
         DATABASE_URL = 'postgres://atzsrcjrnfaauu:f5b344ab9841661b4c5e8381a9474eb45fdb3d017e6faacf7ef853244b57a417' \
@@ -22,13 +23,21 @@ def connect_heroku_pqsql():
         conn_info = json.dumps(conn.info.dsn_parameters)
         global cur
         cur = conn.cursor()
-        return 'Connect success ' + conn_info
+        return_info = return_info + 'connect success '
     # Catch all errors from psycopg2
     except psycopg2.Error as error:
         return "error: {}".format(str(error))
+    else:
+        cur.execute("SELECT table_name FROM information_schema.tables WHERE table_schema='public'")
+        tables_list = cur.fetchall()
+        for i in range(len(tables_list) - 1, -1, -1):
+            if tables_list[i][0] == new_table_name:
+                return_info = return_info + '\ntable: {} exists'.format(new_table_name)
+                return return_info
+        return_info = return_info + create_types() + create_table()
+        return return_info
 
 
-@app.route('/create_types', methods=['GET'])
 def create_types():
     try:
         # Define types
@@ -36,15 +45,16 @@ def create_types():
         cur.execute("CREATE TYPE campaign_time AS (campaign_time_start date, campaign_time_end date);")
         cur.execute("CREATE TYPE campaign_object_type AS (object_type varchar, editorial_topic_name varchar, editorial_topic_tags varchar[]);")
         cur.execute("CREATE TYPE campaign_core_metric_type AS (type varchar, value varchar);")
+        conn.commit()
+        return 'types defined  '
     except psycopg2.Error as error:
         conn.rollback()
-        return "error: {}".format(str(error))
+        return "error: {}  ".format(str(error))
     # Occurs when cur is NoneType due to the failed connection
     except AttributeError as error:
-        return "error: no connection"
+        return "error: no connection  "
 
 
-@app.route('/create_table', methods=['GET'])
 def create_table():
     try:
         # Create a new table
@@ -57,7 +67,7 @@ def create_table():
         cur.execute("""SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'""")
     except psycopg2.Error as error:
         conn.rollback()
-        return "error: {}".format(str(error))
+        return "error: {}  ".format(str(error))
     else:
         tables = cur.fetchall()
         # Traverse the tables reversely
@@ -66,8 +76,8 @@ def create_table():
             table = table[0]
             if table == new_table_name:
                 conn.commit()
-                return 'Create success'
-        return 'Create failed'
+                return 'create table ' + new_table_name + ' success  '
+        return 'create table ' + new_table_name + ' failed  '
 
 
 @app.route('/create_campaign', methods=['POST'])
@@ -156,7 +166,7 @@ def get_campaigns():
         return jsonify(res_dict)
 
     except psycopg2.Error as error:
-        #conn.rollback()
+        # conn.rollback()
         return "error: {}".format(str(error))
     except AttributeError as error:
         return "error: no connection"
