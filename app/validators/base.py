@@ -3,8 +3,6 @@ from wtforms import Form, ValidationError
 
 from app.libs.error_code import ParameterException
 
-__author__ = 'Allen7D'
-
 
 class BaseValidator(Form):
     def __init__(self):

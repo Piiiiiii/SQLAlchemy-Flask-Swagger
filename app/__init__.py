@@ -4,13 +4,13 @@ from app.web import web
 
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder="./static", template_folder="./static/views")
 
     app.config.from_object('app.config.secure')
     app.config.from_object('app.config.setting')
 
     register_blueprint(app)
-    # register_plugin(app)
+    register_plugin(app)
 
     return app
 

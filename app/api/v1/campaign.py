@@ -9,17 +9,15 @@ from app.validators.forms import PaginateValidator
 api = RedPrint(name='campaign', description='广告Campaign', api_doc=api_doc)
 
 
-@api.route('/get_campaigns_by_user', methods=['GET'])
+@api.route('/get_campaigns', methods=['GET'])
+@api.doc()
 def get_campaigns():
-    user_id = request.values.get('user_id')
-    token = request.values.get('token')
-
+    # user_id = request.values.get('user_id')
+    # token = request.values.get('token')
     validator = PaginateValidator().validate_for_api()
     page_number = validator.page.data
     items_per_page = validator.size.data
-    paging_orders = Campaign.get_campaigns_by_user_token(
-        user_id,
-        token,
+    paging_orders = Campaign.get_campaigns(
         page=page_number,
         size=items_per_page
     )

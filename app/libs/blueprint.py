@@ -9,10 +9,12 @@ class Blueprint(_Blueprint):
                  url_prefix=None, subdomain=None, url_defaults=None,
                  root_path=None):
         self.rp_list = rp_list
-        super(Blueprint, self).__init__(name, import_name, static_folder,
-                                        static_url_path, template_folder,
-                                        url_prefix, subdomain, url_defaults,
-                                        root_path)
+        super(Blueprint, self).__init__(
+            name, import_name, static_folder,
+            static_url_path, template_folder,
+            url_prefix, subdomain, url_defaults,
+            root_path
+        )
 
     @property
     def tags(self):
