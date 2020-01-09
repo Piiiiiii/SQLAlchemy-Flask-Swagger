@@ -1,4 +1,4 @@
-FROM python:3.4.5-slim
+FROM python:3.6.6-slim
 
 # Upgrade pip
 RUN pip install --upgrade pip
@@ -16,4 +16,4 @@ ADD . .
 RUN pip install -r requirements.txt
 
 # Define our command to be run when launching the container
-CMD gunicorn app:app --bind 0.0.0.0:$PORT --reload
+CMD gunicorn server:app -w 4 --bind 0.0.0.0:$PORT --reload

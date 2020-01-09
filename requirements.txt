@@ -1,19 +1,22 @@
-# Base packages:
-# Flask
-# gunicorn
-# psycopg2
+appdirs==1.4.3
+attrs==19.3.0
 black==18.9b0
 click==6.7
 flasgger==0.9.3
 Flask==0.12.2
-flask-cors==3.0.8
-flask-script==2.0.6
-flask-sqlalchemy==2.4.1
+Flask-Cors==3.0.8
+Flask-Script==2.0.6
+Flask-SQLAlchemy==2.4.1
 gunicorn==19.7.1
 itsdangerous==0.24
 Jinja2==2.10
+jsonschema==2.6.0
 MarkupSafe==1.0
+mistune==0.8.4
 psycopg2-binary==2.8.4
-sqlalchemy==1.3.12
+PyYAML==5.3
+six==1.13.0
+SQLAlchemy==1.3.12
+toml==0.10.0
 Werkzeug==0.13
-wtforms==2.2.1
+WTForms==2.2.1
