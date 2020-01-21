@@ -16,6 +16,8 @@
 - New requirement psycopg2-binary==2.8.4
 - Users can connect to psycopg2 and create a new table
 
-## Update for APIs
+## Update APIs
 - Update apis of user, campaign, topic, article and tag
 - Build tables
+
+## Update APIDocs and error message

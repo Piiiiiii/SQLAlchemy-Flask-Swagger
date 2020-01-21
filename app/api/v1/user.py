@@ -1,6 +1,6 @@
 from flask import request
 
-from app.api_docs.v1 import campaign as api_doc
+from app.api_docs.v1 import user as api_doc
 from app.libs.error_code import Success
 from app.libs.redprint import RedPrint
 from app.models.user import User
@@ -9,7 +9,7 @@ from app.validators.forms import PaginateValidator
 api = RedPrint(name='user', description='User', api_doc=api_doc)
 
 
-@api.route('/create_user', methods=['GET'])
+@api.route('/create_user', methods=['POST'])
 @api.doc()
 def create_user():
     user_id = request.values.get('user_id')

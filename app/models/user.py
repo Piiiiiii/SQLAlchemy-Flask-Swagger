@@ -21,7 +21,7 @@ class User(Base):
     campaigns = db.relationship('Campaign', secondary=user_campaign, backref=db.backref('users', lazy='dynamic'))
 
     def keys(self):
-        self.hide('id')
+        self.hide('index')
         return self.fields
 
     @staticmethod

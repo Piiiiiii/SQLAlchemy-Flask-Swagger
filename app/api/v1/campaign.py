@@ -25,7 +25,7 @@ def get_campaigns():
     return Success(paging_orders)
 
 
-@api.route('/create_campaign')
+@api.route('/create_campaign', methods=['POST'])
 @api.doc()
 def create_campaign():
     request_body = request.get_json()
@@ -35,14 +35,14 @@ def create_campaign():
     campaign_obj_type = request_body['campaign_obj_type']
     campaign_time_start = request_body['campaign_time_start']
     campaign_time_end = request_body['campaign_time_end']
-    message = Campaign.create_campaign(
+    linked_user = Campaign.create_campaign(
         user_id=user_id,
         campaign_id=campaign_id,
         campaign_name=campaign_name,
         campaign_obj_type=campaign_obj_type,
         campaign_time_start=campaign_time_start,
         campaign_time_end=campaign_time_end)
-    return str(message)
+    return Success(linked_user)
 
 
 @api.route('/test')

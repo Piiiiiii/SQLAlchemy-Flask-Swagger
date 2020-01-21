@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Enum, Date, Float
-from sqlalchemy.dialects.postgresql import UUID, ARRAY
+from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime
 import re
 
@@ -29,7 +29,7 @@ class Campaign(Base):
                                        backref=db.backref('campaigns', lazy='dynamic'))
 
     def keys(self):
-        self.hide('campaign_id')
+        self.hide('index')
         return self.fields
 
     @staticmethod
@@ -41,10 +41,10 @@ class Campaign(Base):
         with db.auto_commit():
             new_campaign = Campaign(campaign_id=campaign_id, campaign_name=campaign_name, campaign_obj_type=campaign_obj_type,
                                     campaign_time_start=campaign_time_start, campaign_time_end=campaign_time_end)
-            linked_user = User.query.filter_by(user_id=user_id).first()
+            linked_user = User.query.filter_by(user_id=user_id).first_or_404()
             new_campaign.users.append(linked_user)
             db.session.add(new_campaign)
-        return 'create campaign success'
+        return linked_user
 
     @classmethod
     def get_campaigns(cls, page=1, size=15):

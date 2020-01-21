@@ -29,40 +29,40 @@ class Article(Base):
     tags = db.relationship('Tag', secondary=article_tag, backref=db.backref('articles', lazy='dynamic'))
 
     def keys(self):
-        self.hide('id')
+        self.hide('index')
         return self.fields
 
     @staticmethod
     def upload_and_parse_url(editorial_topic_id, target_url):
         with db.auto_commit():
-            linked_editorial_topic = Editorial_topic.query.filter_by(editorial_topic_id=editorial_topic_id).first()
+            linked_editorial_topic = Editorial_topic.query.filter_by(editorial_topic_id=editorial_topic_id).first_or_404()
             linked_article = Article(url=target_url)
             linked_editorial_topic.articles.append(linked_article)
-        return 'upload and parse url success'
+        return linked_editorial_topic
 
     @staticmethod
     def create_article(editorial_topic_id, article_id):
         with db.auto_commit():
-            linked_editorial_topic = Editorial_topic.query.filter_by(editorial_topic_id=editorial_topic_id).first()
+            linked_editorial_topic = Editorial_topic.query.filter_by(editorial_topic_id=editorial_topic_id).first_or_404()
             new_article = Article(article_id=article_id)
             new_article.editorial_topics.append(linked_editorial_topic)
             db.session.add(new_article)
-        return 'create article success'
+        return linked_editorial_topic
 
     @staticmethod
     def delete_tag_from_article(article_id, article_tags):
         with db.auto_commit():
-            target_article = Article.query.filter_by(article_id=article_id).first()
+            target_article = Article.query.filter_by(article_id=article_id).first_or_404()
             for delete_tag in article_tags:
                 for exist_tag in target_article.tags:
                     if exist_tag.index == delete_tag['tag_id']:
                         target_article.tags.remove(exist_tag)
                         break
-        return 'delete tag from article success'
+        return target_article
 
     @staticmethod
     def edit_article_importance(article_id, article_importance):
         with db.auto_commit():
-            target_article = Article.query.filter_by(article_id=article_id).first()
+            target_article = Article.query.filter_by(article_id=article_id).first_or_404()
             target_article.article_importance = article_importance
-        return 'edit article importance success'
+        return target_article

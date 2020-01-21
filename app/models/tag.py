@@ -16,6 +16,10 @@ class Tag(Base):
     tag_name = Column(String)
     tag_entity_type = Column(String)
 
+    def keys(self):
+        self.hide('index')
+        return self.fields
+
     @staticmethod
     def create_tag(tag_name, tag_entity_type):
         with db.auto_commit():
@@ -26,17 +30,17 @@ class Tag(Base):
     @staticmethod
     def add_tag_to_topic(editorial_topic_id, editorial_topic_tags):
         with db.auto_commit():
-            linked_editorial_topic = Editorial_topic.query.filter_by(editorial_topic_id=editorial_topic_id).first()
+            linked_editorial_topic = Editorial_topic.query.filter_by(editorial_topic_id=editorial_topic_id).first_or_404()
             for tag in editorial_topic_tags:
                 linked_tag = Tag.query.filter_by(index=tag['tag_id']).first()
                 linked_editorial_topic.tags.append(linked_tag)
-        return 'add tag to topic success'
+        return linked_editorial_topic
 
     @staticmethod
     def add_tag_to_article(article_id, article_tags):
         with db.auto_commit():
-            linked_article = Article.query.filter_by(article_id=article_id).first()
+            linked_article = Article.query.filter_by(article_id=article_id).first_or_404()
             for tag in article_tags:
                 linked_tag = Tag.query.filter_by(index=tag['tag_id']).first()
                 linked_article.tags.append(linked_tag)
-        return 'add tag to article success'
+        return linked_article

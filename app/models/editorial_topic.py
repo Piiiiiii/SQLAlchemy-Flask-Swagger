@@ -29,7 +29,7 @@ class Editorial_topic(Base):
     articles = db.relationship('Article', secondary=editorial_topic_article, backref=db.backref('editorial_topics', lazy='dynamic'))
 
     def keys(self):
-        self.hide('editorial_topic_id')
+        self.hide('index')
         return self.fields
 
     @staticmethod
@@ -37,25 +37,24 @@ class Editorial_topic(Base):
         with db.auto_commit():
             new_editorial_topic = Editorial_topic(editorial_topic_id=editorial_topic_id, editorial_topic_name=editorial_topic_name,
                                                   editorial_topic_description=editorial_topic_description)
-            linked_campaign = Campaign.query.filter_by(campaign_id=campaign_id).first()
+            linked_campaign = Campaign.query.filter_by(campaign_id=campaign_id).first_or_404()
             new_editorial_topic.campaigns.append(linked_campaign)
             db.session.add(new_editorial_topic)
-        return 'create editorial_topic success'
+        return linked_campaign
 
     @staticmethod
     def delete_topic(editorial_topic_id):
         with db.auto_commit():
-            delete_editorial_topic = Editorial_topic.query.filter_by(editorial_topic_id=editorial_topic_id).first()
+            delete_editorial_topic = Editorial_topic.query.filter_by(editorial_topic_id=editorial_topic_id).first_or_404()
             db.session.delete(delete_editorial_topic)
-        return 'delete topic success'
+        return delete_editorial_topic
 
     @staticmethod
     def delete_article_from_topic(editorial_topic_id, article_id):
         with db.auto_commit():
-            target_editorial_topic = Editorial_topic.query.filter_by(editorial_topic_id=editorial_topic_id).first()
+            target_editorial_topic = Editorial_topic.query.filter_by(editorial_topic_id=editorial_topic_id).first_or_404()
             for article in target_editorial_topic.articles:
                 if article.article_id == article_id:
                     target_editorial_topic.articles.remove(article)
-                    return 'delete article from topic success'
-        return 'this article is not found'
+        return target_editorial_topic
 
