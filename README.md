@@ -1,4 +1,4 @@
-# A basic Flask App
+# Database for Flask App
 
 ## Run with virtualenv
 - Create a virtualenv folder `virtualenv -p python3 venv`
